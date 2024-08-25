@@ -13,8 +13,8 @@ from configs import config_vit as cfg_vit
 from einops import rearrange, repeat
 
 def infer(
-    model_path = "checkpoints/model.pt.0.11",
-    image_path = "data/dogs-vs-cats/test/100.jpg"
+    model_path = "checkpoints/model.pt.0",
+    image_path = "data/dogs-vs-cats/test/1.jpg"
 ):
     model = VIT(
         image_size = cfg_vit.image_size,

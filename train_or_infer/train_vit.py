@@ -24,7 +24,7 @@ def cycle(dataloader):
 
 
 def train(
-    epochs=2,
+    epochs=200,
     batch_size=64,
     learning_rate=0.001,
     weight_decay=0.01,
@@ -79,7 +79,6 @@ def train(
             optimizer.zero_grad()
             train_len = 1
             for i, (data, label) in enumerate(dataloader):
-                train_len += 1
                 data = data.to(device)
                 label = label.to(device)
                 # print(data.shape)
@@ -92,14 +91,7 @@ def train(
                     pbar.set_description(f'loss: {loss:.4f}, acc: {acc:.4f}')
                     pbar.update(1)
                 accelerator.backward(loss)
-
-                torch.save({
-                    'epoch': epoch,
-                    'model_state_dict': model.state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),
-                    'loss': epoch_loss,
-                    }, f"checkpoints/model.pt.{epoch}.{train_len}"
-                )
+                train_len += 1
             epoch_loss = epoch_loss / train_len
             epoch_accuracy = epoch_accuracy / train_len
 
