@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import sys
-sys.path.append(".")
-sys.path.append("..")
-
 import torch
 import torch.nn as nn
 

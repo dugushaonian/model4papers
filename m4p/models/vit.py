@@ -5,15 +5,12 @@
 https://arxiv.org/abs/2010.11929
 """
 
-import sys
-print(sys.path)
-
 import torch
 from torch import nn
 from einops import repeat
 from einops.layers.torch import Rearrange
 
-from m4p.model4papers.models.transformer import Transformer
+from m4p.models.transformer import Transformer
 
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
