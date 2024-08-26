@@ -14,7 +14,21 @@ from m4p.models.transformer import Transformer
 from m4p.utils.pair import pair
 
 class VIT(nn.Module):
-    def __init__(self, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0.0, emb_dropout = 0.0):
+    def __init__(
+        self,
+        image_size: int,
+        patch_size: int,
+        out_size: int,
+        dim: int,
+        depth: int,
+        heads: int,
+        mlp_dim: int,
+        pool: str = 'cls',
+        channels: int = 3,
+        dim_head: int = 64,
+        dropout: float = 0.0,
+        emb_dropout: float = 0.0
+    ) -> None:
         super().__init__()
         image_height, image_width = pair(image_size)
         patch_height, patch_width = pair(patch_size)
@@ -42,9 +56,9 @@ class VIT(nn.Module):
         self.pool = pool
         self.to_latent = nn.Identity()
 
-        self.mlp_head = nn.Linear(dim, num_classes)
+        self.mlp_head = nn.Linear(dim, out_size)
     
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.to_patch_embedding(x)
         b, n, _ = x.shape
 

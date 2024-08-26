@@ -9,7 +9,7 @@ class Attention(nn.Module):
     """
     Attention
     """
-    def __init__(self, dim, heads = 8, dim_head = 64, dropout = 0.0):
+    def __init__(self, dim: int, heads: int = 8, dim_head: int = 64, dropout: float = 0.0) -> None:
         super().__init__()
         inner_dim = dim_head * heads
         project_out = not (heads == 1 and dim_head == dim)
@@ -29,7 +29,7 @@ class Attention(nn.Module):
             nn.Dropout(dropout),
         ) if project_out else nn.Identity()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.norm(x)
 
         qkv = self.to_qkv(x).chunk(3, dim = -1)

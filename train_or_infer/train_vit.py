@@ -45,7 +45,7 @@ def train(
     model = VIT(
         image_size = cfg_vit.image_size,
         patch_size = cfg_vit.patch_size,
-        num_classes = cfg_vit.num_classes,
+        out_size = cfg_vit.num_classes,
         dim = cfg_vit.dim,
         depth = cfg_vit.depth,
         heads = cfg_vit.heads,

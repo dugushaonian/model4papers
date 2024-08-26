@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import torch
 from torch import nn
 
 class FeedForward(nn.Module):
     """
     FeedForward
     """
-    def __init__(self, dim, hidden_dim, dropout = 0.0):
+    def __init__(self, dim: int, hidden_dim: int, dropout: float = 0.0) -> None:
         super().__init__()
         self.feedforward = nn.Sequential(
             nn.LayerNorm(dim),
@@ -18,6 +19,6 @@ class FeedForward(nn.Module):
             nn.Dropout(dropout)
         )
     
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.feedforward(x)
 
