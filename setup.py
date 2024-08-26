@@ -12,7 +12,7 @@ setup(
     packages = find_packages(exclude=['examples']),
     version = '0.0.1',
     license='MIT',
-    description = 'Vision Transformer (ViT) - Pytorch',
+    description = 'model for papers, implementation by pytorch',
     long_description=long_description,
     long_description_content_type = 'text/markdown',
     author = 'Dugufei',
