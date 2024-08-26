@@ -13,6 +13,22 @@ from einops.layers.torch import Rearrange
 from m4p.models.transformer import Transformer
 from m4p.utils.pair import pair
 
+class VitConfig(object):
+    def __init__(self) -> None:
+        super().__init__()
+        self.image_size = 224
+        self.patch_size = 16
+        self.out_size = 1024
+        self.dim = 768
+        self.depth = 12
+        self.heads = 8
+        self.mlp_dim = 2048
+        self.pool = 'mean'
+        self.channels = 3
+        self.dim_head = 64
+        self.dropout = 0.0
+        self.emb_dropout = 0.0
+
 class VIT(nn.Module):
     def __init__(
         self,
