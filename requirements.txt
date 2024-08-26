@@ -3,3 +3,6 @@ tqdm==4.66.4
 accelerate==0.33.0
 pytorch==2.3.0
 einops==0.8.0
+scikit-learn==1.5.1
+torchvision==0.18.1
+pillow==10.4.0
