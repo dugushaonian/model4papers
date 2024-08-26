@@ -11,10 +11,7 @@ from einops import repeat
 from einops.layers.torch import Rearrange
 
 from m4p.models.transformer import Transformer
-
-def pair(t):
-    return t if isinstance(t, tuple) else (t, t)
-
+from m4p.utils.pair import pair
 
 class VIT(nn.Module):
     def __init__(self, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0.0, emb_dropout = 0.0):
