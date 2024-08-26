@@ -5,12 +5,12 @@ https://www.kaggle.com/competitions/dogs-vs-cats/data
 """
 
 import os
-import sys
 import glob
+
 from PIL import Image
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
+from torchvision import transforms
 from sklearn.model_selection import train_test_split
 
 class DogsVsCatsDataSet(Dataset):

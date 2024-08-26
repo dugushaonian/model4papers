@@ -5,17 +5,18 @@ import sys
 sys.path.append(".")
 sys.path.append("..")
 
-# import gin
 import torch
 import torch.nn as nn
+
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import LinearLR
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from accelerate import Accelerator
-from models.vit import VIT
-from configs import config_vit as cfg_vit
-from dataprocess import dogs_vs_cats
+
+from m4p.models.vit import VIT
+from m4p.configs import config_vit as cfg_vit
+from m4p.dataprocess import dogs_vs_cats
 
 def cycle(dataloader):
     while True:

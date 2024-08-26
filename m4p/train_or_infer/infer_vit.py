@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 # coding=utf-8
-import sys
-sys.path.append(".")
-sys.path.append("..")
+
+import torch
 
 from PIL import Image
-import torch
-from torchvision import datasets, transforms
+from einops import rearrange
+from torchvision import transforms
 
-from models.vit import VIT
-from configs import config_vit as cfg_vit
-from einops import rearrange, repeat
+from m4p.models.vit import VIT
+from m4p.configs import config_vit as cfg_vit
+
 
 def infer(
     model_path = "checkpoints/model.pt.0",
