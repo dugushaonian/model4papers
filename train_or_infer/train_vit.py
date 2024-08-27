@@ -120,11 +120,7 @@ def main(_argv):
 
 
 if __name__ == "__main__":
-    flags.DEFINE_multi_string(
-        'gin_file', None, 'path'
-    )
-    flags.DEFINE_multi_string(
-            'gin_param', None, 'newline'
-        )
+    flags.DEFINE_multi_string('gin_file', None, 'path')
+    flags.DEFINE_multi_string('gin_param', None, 'newline')
     FLAGS = flags.FLAGS
     app.run(main)

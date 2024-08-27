@@ -7,33 +7,21 @@ from PIL import Image
 from einops import rearrange
 from torchvision import transforms
 
-from m4p.models.vit import VIT
-from m4p.configs import config_vit as cfg_vit
+from m4p.models.vit import VIT, VitConfig, ViT
 
+from absl import flags
+from absl import app
 
-def infer(
-    model_path = "checkpoints/model.pt.0",
-    image_path = "data/dogs-vs-cats/test/1.jpg"
+@gin.configurable
+def infer_vit(
+    model_path: str = "checkpoints/model.pt.0",
+    image_path: str = "data/dogs-vs-cats/test/1.jpg"
 ):
-    model = VIT(
-        image_size = cfg_vit.image_size,
-        patch_size = cfg_vit.patch_size,
-        out_size = cfg_vit.num_classes,
-        dim = cfg_vit.dim,
-        depth = cfg_vit.depth,
-        heads = cfg_vit.heads,
-        mlp_dim = cfg_vit.mlp_dim,
-        pool = cfg_vit.pool,
-        channels = cfg_vit.channels,
-        dim_head = cfg_vit.dim_head,
-        dropout = cfg_vit.dropout,
-        emb_dropout = cfg_vit.emb_dropout
-    )
+    model = ViT(VitConfig())
 
     checkpoint = torch.load(model_path)
     model.load_state_dict(checkpoint['model_state_dict'])
-    # model.load_state_dict(checkpoint)
-    model.eval()
+    # model.eval()
     img = img = Image.open(image_path)
     test_transforms = transforms.Compose(
         [
@@ -50,5 +38,14 @@ def infer(
     label = label.argmax(dim = 1)
     print(label)
 
+
+def main(_argv):
+    gin.parse_config_files_and_bindings(FLAGS.gin_file, FLAGS.gin_param)
+    infer_vit(VitConfig())
+
+
 if __name__ == "__main__":
-    infer()
+    flags.DEFINE_multi_string('gin_file', None, 'path')
+    flags.DEFINE_multi_string('gin_param', None, 'newline')
+    FLAGS = flags.FLAGS
+    app.run(main)

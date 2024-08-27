@@ -21,3 +21,6 @@ VitConfig.channels = 3
 VitConfig.dim_head = 64
 VitConfig.dropout = 0.0
 VitConfig.emb_dropout = 0.0
+
+infer_vit.model_path = "checkpoints/model.pt.0"
+infer_vit.image_path = "data/dogs-vs-cats/test/1.jpg"
