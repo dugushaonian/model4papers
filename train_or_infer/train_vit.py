@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import gin
 import torch
 import torch.nn as nn
 
@@ -10,52 +11,37 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from accelerate import Accelerator
 
-from m4p.models.vit import VIT
-from m4p.configs import config_vit as cfg_vit
+from absl import flags
+from absl import app
+
+from m4p.models.vit import VIT, VitConfig, ViT
 from m4p.dataprocess import dogs_vs_cats
 
-def cycle(dataloader):
-    while True:
-        for data, label in dataloader:
-            yield data, label
-
-
-def train(
-    epochs=200,
-    batch_size=64,
-    learning_rate=0.001,
-    weight_decay=0.01,
-    max_grad_norm=1,
-    train_dataset_dir="data/dogs-vs-cats/train/",
-    test_dataset_dir="data/dogs-vs-cats/test/",
-    amp=False,
-    mixed_precision_type="fp16"
-):
+@gin.configurable
+def train_vit(
+    cfg_vit: VitConfig,
+    epochs: int = 200,
+    batch_size: int = 64,
+    learning_rate: float = 0.001,
+    weight_decay: float = 0.01,
+    max_grad_norm: float = 1,
+    train_dataset_dir: str = "data/dogs-vs-cats/train/",
+    test_dataset_dir: str = "data/dogs-vs-cats/test/",
+    amp: bool = False,
+    mixed_precision_type: str = "fp16"
+) -> None:
     accelerator = Accelerator(
         split_batches = True,
         mixed_precision=mixed_precision_type if amp else 'no'
     )
     device = accelerator.device
+
     # dataset
     train_loader, valid_loader, test_loader = dogs_vs_cats.dogs_vs_cats_dataloader(train_dataset_dir, test_dataset_dir, batch_size)
-
-    # dataloader = cycle(train_loader)
     dataloader, valid_loader, test_loader = accelerator.prepare(train_loader, valid_loader, test_loader)
+
     # model
-    model = VIT(
-        image_size = cfg_vit.image_size,
-        patch_size = cfg_vit.patch_size,
-        out_size = cfg_vit.num_classes,
-        dim = cfg_vit.dim,
-        depth = cfg_vit.depth,
-        heads = cfg_vit.heads,
-        mlp_dim = cfg_vit.mlp_dim,
-        pool = cfg_vit.pool,
-        channels = cfg_vit.channels,
-        dim_head = cfg_vit.dim_head,
-        dropout = cfg_vit.dropout,
-        emb_dropout = cfg_vit.emb_dropout
-    )
+    model = ViT(cfg_vit)
 
     # optimizer
     optimizer = AdamW(
@@ -63,11 +49,13 @@ def train(
         lr = learning_rate,
         weight_decay=weight_decay
     )
+
     # scheduler
     scheduler = LinearLR(optimizer)
     model, optimizer, scheduler = accelerator.prepare(model, optimizer, scheduler)
 
     CEL = nn.CrossEntropyLoss()
+
     with tqdm(initial=0, total=epochs * len(train_loader), disable=not Accelerator.is_main_process) as pbar:
         for epoch in range(epochs):
             model.train()
@@ -126,5 +114,17 @@ def train(
             )
     
 
+def main(_argv):
+    gin.parse_config_files_and_bindings(FLAGS.gin_file, FLAGS.gin_param)
+    train_vit(VitConfig())
+
+
 if __name__ == "__main__":
-    train()
+    flags.DEFINE_multi_string(
+        'gin_file', None, 'path'
+    )
+    flags.DEFINE_multi_string(
+            'gin_param', None, 'newline'
+        )
+    FLAGS = flags.FLAGS
+    app.run(main)

@@ -30,7 +30,8 @@ setup(
         'einops>=0.8.0',
         'scikit-learn>=1.5.1',
         'torchvision>=0.18.1',
-        'pillow>=10.4.0'
+        'pillow>=10.4.0',
+        'absl-py>=2.1.0'
     ],
     setup_requires=[
         'pytest-runner',
@@ -43,7 +44,8 @@ setup(
         'einops>=0.8.0',
         'scikit-learn>=1.5.1',
         'torchvision>=0.18.1',
-        'pillow>=10.4.0'
+        'pillow>=10.4.0',
+        'absl-py>=2.1.0'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

@@ -1,0 +1,23 @@
+train_vit.cfg_vit = @m4p.models.vit.VitConfig
+train_vit.epochs = 200
+train_vitbatch_size = 64
+train_vit.learning_rate = 0.001
+train_vit.weight_decay = 0.01
+train_vit.max_grad_norm = 1
+train_vit.train_dataset_dir = "data/dogs-vs-cats/train/"
+train_vit.test_dataset_dir = "data/dogs-vs-cats/test/"
+train_vit.amp = False
+train_vit.mixed_precision_type = "fp16"
+
+VitConfig.image_size = 224
+VitConfig.patch_size = 16
+VitConfig.out_size = 1024
+VitConfig.dim = 768
+VitConfig.depth = 12
+VitConfig.heads = 8
+VitConfig.mlp_dim = 2048
+VitConfig.pool = 'mean'
+VitConfig.channels = 3
+VitConfig.dim_head = 64
+VitConfig.dropout = 0.0
+VitConfig.emb_dropout = 0.0

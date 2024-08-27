@@ -5,6 +5,7 @@
 https://arxiv.org/abs/2010.11929
 """
 
+import gin
 import torch
 from torch import nn
 from einops import repeat
@@ -13,21 +14,36 @@ from einops.layers.torch import Rearrange
 from m4p.models.transformer import Transformer
 from m4p.utils.pair import pair
 
+@gin.configurable
 class VitConfig(object):
-    def __init__(self) -> None:
+    def __init__(self,
+        image_size: int = 224,
+        patch_size: int = 16,
+        out_size: int = 1024,
+        dim: int = 768,
+        depth: int = 12,
+        heads: int = 8,
+        mlp_dim: int = 2048,
+        pool: str = 'mean',
+        channels: int = 3,
+        dim_head: int = 64,
+        dropout: float = 0.0,
+        emb_dropout: float = 0.0
+    ) -> None:
         super().__init__()
-        self.image_size = 224
-        self.patch_size = 16
-        self.out_size = 1024
-        self.dim = 768
-        self.depth = 12
-        self.heads = 8
-        self.mlp_dim = 2048
-        self.pool = 'mean'
-        self.channels = 3
-        self.dim_head = 64
-        self.dropout = 0.0
-        self.emb_dropout = 0.0
+        self.image_size = image_size
+        self.patch_size = patch_size
+        self.out_size = out_size
+        self.dim = dim
+        self.depth = depth
+        self.heads = heads
+        self.mlp_dim = mlp_dim
+        self.pool = pool
+        self.channels = channels
+        self.dim_head = dim_head
+        self.dropout = dropout
+        self.emb_dropout = emb_dropout
+
 
 class VIT(nn.Module):
     def __init__(
@@ -89,3 +105,25 @@ class VIT(nn.Module):
 
         x = self.to_latent(x)
         return self.mlp_head(x)
+
+
+class ViT(nn.Module):
+    def __init__(self, vit_cfg: VitConfig) -> None:
+        super().__init__()
+        self.vit = VIT(
+            image_size = vit_cfg.image_size,
+            patch_size = vit_cfg.patch_size,
+            out_size = vit_cfg.out_size,
+            dim = vit_cfg.dim,
+            depth = vit_cfg.depth,
+            heads = vit_cfg.heads,
+            mlp_dim = vit_cfg.mlp_dim,
+            pool = vit_cfg.pool,
+            channels = vit_cfg.channels,
+            dim_head = vit_cfg.dim_head,
+            dropout = vit_cfg.dropout,
+            emb_dropout = vit_cfg.emb_dropout
+        )
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.vit(x)
