@@ -2,7 +2,6 @@
 # coding=utf-8
 
 """
-Multi-headed grouped query self-attention (GQA) layer introduced in https://arxiv.org/pdf/2305.13245
 """
 import torch
 from torch import nn
@@ -10,9 +9,9 @@ from einops import rearrange
 
 class SelfAttention(nn.Module):
     """
-    Attention
+    SelfAttention
     """
-    def __init__(self, dim: int, dim_kq: int = 64, dim_v: int = 64, dropout: float = 0.0) -> None:
+    def __init__(self, dim: int, dim_kq: int = 64, dim_v: int = 64) -> None:
         super().__init__()
         self.dim_kq = dim_kq
         self.w_q = nn.Parameter(torch.rand(dim, dim_kq))
