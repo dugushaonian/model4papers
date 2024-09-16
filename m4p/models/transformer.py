@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 from m4p.models.feedforward import FeedForward
-from m4p.models.attention import Attention
+from m4p.models import Attention
 
 class Transformer(nn.Module):
     def __init__(self, dim: int, depth: int, heads: int, dim_head: int, mlp_dim: int, dropout: float = 0.0) -> None:
