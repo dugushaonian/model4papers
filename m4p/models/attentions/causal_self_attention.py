@@ -12,38 +12,34 @@ class CausalSelfAttention(nn.Module):
     """
     Attention
     """
-    def __init__(self, dim: int, heads: int = 8, dim_head: int = 64, dropout: float = 0.0) -> None:
+    def __init__(self, dim: int, dim_kq: int = 64, dim_v: int = 64) -> None:
         super().__init__()
-        inner_dim = dim_head * heads
-        project_out = not (heads == 1 and dim_head == dim)
-
-        self.heads = heads
-        self.scale = dim_head ** -0.5
-
-        self.norm = nn.LayerNorm(dim)
-
-        self.attend = nn.Softmax(dim = -1)
-        self.dropout = nn.Dropout(dropout)
-
-        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias = False)
-
-        self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, dim),
-            nn.Dropout(dropout),
-        ) if project_out else nn.Identity()
+        self.dim_kq = dim_kq
+        self.w_q = nn.Parameter(torch.rand(dim, dim_kq))
+        self.w_k = nn.Parameter(torch.rand(dim, dim_kq))
+        self.w_v = nn.Parameter(torch.rand(dim, dim_v))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.norm(x)
+        k = x @ self.w_k
+        q = x @ self.w_q
+        v = x @ self.w_v
 
-        qkv = self.to_qkv(x).chunk(3, dim = -1)
-        q, k, v = map(lambda t : rearrange(t, 'b n (h d) -> b h n d', h = self.heads), qkv)
+        att_s = q @ k.T
 
-        dots = torch.matmul(q, k.transpose(-1, -2)) * self.scale
+        block_size = att_s.shape[0]
+        mask = torch.triu(torch.ones(block_size, block_size), diagonal = 1)
+        masked = att_s.masked_fill(mask.bool(), -torch.inf)
 
-        attn = self.attend(dots)
-        attn = self.dropout(attn)
+        att_w = torch.softmax(
+            masked / self.dim_kq ** 0.5, dim = -1
+        )
 
-        out = torch.matmul(attn, v)
-        out = rearrange(out, 'b h n d -> b n (h d)')
+        out = att_w @ v
+        return out
 
-        return self.to_out(out)
+
+# if __name__ == "__main__":
+#     attention = CausalSelfAttention(4,4,4)
+#     x = torch.randn(2, 4)
+#     print(x)
+#     print(attention(x))
