@@ -11,30 +11,31 @@ from torch import nn
 from einops import repeat
 from einops.layers.torch import Rearrange
 
-from m4p.models.vit import VIT, VitConfig
+from m4p.models.vit import VIT, VitConfig, ViT
 
 class TextConfing(object):
     def __init__(self) -> None:
         pass
 
+
 class CLIP(nn.Module):
     def __init__(self, image_config : VitConfig, text_config : TextConfing) -> None:
         super().__init__()
-        self.image_encoder = VIT(
-            image_size = image_config.image_size,
-            patch_size = image_config.patch_size,
-            out_size = image_config.out_size,
-            dim = image_config.dim,
-            depth = image_config.depth,
-            heads = image_config.heads,
-            mlp_dim = image_config.mlp_dim,
-            pool = image_config.pool,
-            channels = image_config.channels,
-            dim_head = image_config.dim_head,
-            dropout = image_config.dropout,
-            emb_dropout = image_config.emb_dropout
-        )
+        self.image_encoder = ViT(image_config)
         self.text_encoder = None
 
+    def encode_image(self, image: torch.Tensor) -> torch.Tensor:
+        return self.image_encoder(image)
+
+    def encode_text(self, text: torch.Tensor) -> torch.Tensor:
+        return self.text_encoder(text)
+
     def forward(self, text_x: torch.Tensor, img_x: torch.Tensor) -> torch.Tensor:
+        # text_features = self.text_encoder(text_x)
+        # image_features = self.image_encoder(img_x)
+
+        # text_features = text_features / text_features.norm(dim = 1, keepdim = True)
+        # image_features = image_features / image_features.norm(dim = 1, keepdim = True)
+
+        # logit_scale = 
         pass
