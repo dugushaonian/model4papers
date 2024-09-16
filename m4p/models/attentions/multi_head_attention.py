@@ -21,7 +21,7 @@ class MultiHeadAttention(nn.Module):
 
 
 # if __name__ == "__main__":
-#     self_attention = MultiHeadAttention(32, 4, 4, 8)
+#     attention = MultiHeadAttention(32, 4, 4, 8)
 #     x = torch.randn(2, 32)
 #     print(x)
-#     print(self_attention(x))
+#     print(attention(x))
