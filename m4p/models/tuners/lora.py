@@ -27,11 +27,11 @@ class LoRALayer(nn.Module):
         return out
 
 
-if __name__ == "__main__":
-    import math
-    lora_layer = LoRALayer(8, 8)
-    nn.init.kaiming_uniform_(lora_layer.A, a=math.sqrt(5))
-    nn.init.kaiming_uniform_(lora_layer.B, a=math.sqrt(5))
-    x = torch.randn(2, 8)
-    print(x)
-    print(lora_layer(x))
+# if __name__ == "__main__":
+#     import math
+#     lora_layer = LoRALayer(8, 8)
+#     nn.init.kaiming_uniform_(lora_layer.A, a=math.sqrt(5))
+#     nn.init.kaiming_uniform_(lora_layer.B, a=math.sqrt(5))
+#     x = torch.randn(2, 8)
+#     print(x)
+#     print(lora_layer(x))
