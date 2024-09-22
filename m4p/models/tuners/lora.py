@@ -23,7 +23,7 @@ class LoRALayer(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         origin_shape = x.shape
         x_flat = x.view(-1, origin_shape[-1])
-        lora_out = (self.dropout(x_flat @ self.A) @ self.B * self.scaling)
+        lora_out = (self.dropout(x_flat) @ self.A @ self.B * self.scaling)
         lora_out = lora_out.view(*origin_shape[:-1], -1)
         out = x + lora_out
         return out
