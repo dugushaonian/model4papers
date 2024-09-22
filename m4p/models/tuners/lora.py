@@ -20,8 +20,6 @@ class LoRALayer(nn.Module):
         self.B = nn.Parameter(torch.zeros((rank, out_dim)))
         self.scaling = self.alpha / self.rank
 
-
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         origin_shape = x.shape
         x_flat = x.view(-1, origin_shape[-1])
