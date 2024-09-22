@@ -5,10 +5,8 @@
 https://arxiv.org/abs/2106.09685
 """
 
-import math
 import torch
 from torch import nn
-from einops import rearrange
 
 class LoRALayer(nn.Module):
     def __init__(self, in_dim: int, out_dim: int, rank: int = 4, dropout: float = 0.0, alpha: float = 1.0) -> None:
@@ -29,10 +27,11 @@ class LoRALayer(nn.Module):
         return out
 
 
-# if __name__ == "__main__":
-#     lora_layer = LoRALayer(8, 8)
-#     nn.init.kaiming_uniform_(lora_layer.A, a=math.sqrt(5))
-#     nn.init.kaiming_uniform_(lora_layer.B, a=math.sqrt(5))
-#     x = torch.randn(2, 8)
-#     print(x)
-#     print(lora_layer(x))
+if __name__ == "__main__":
+    import math
+    lora_layer = LoRALayer(8, 8)
+    nn.init.kaiming_uniform_(lora_layer.A, a=math.sqrt(5))
+    nn.init.kaiming_uniform_(lora_layer.B, a=math.sqrt(5))
+    x = torch.randn(2, 8)
+    print(x)
+    print(lora_layer(x))
