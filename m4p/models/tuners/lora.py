@@ -23,8 +23,18 @@ class LoRALayer(nn.Module):
         x_flat = x.view(-1, origin_shape[-1])
         lora_out = (self.dropout(x_flat) @ self.A @ self.B * self.scaling)
         lora_out = lora_out.view(*origin_shape[:-1], -1)
-        out = x + lora_out
-        return out
+        return lora_out
+
+class LoRALinear(nn.Linear):
+    def __init__(self, in_dim: int, out_dim: int, rank: int = 4, alpha: float = 1.0, bias = True, dropout: float = 0.0) -> None:
+        super().__init__(in_dim, out_dim, bias)
+        self.lora = LoRALayer(in_dim, out_dim, rand, dropout, alpha)
+
+        # Freeze
+        self.weight.requires_grad = False
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return super().forward(x) + self.lora(x)
 
 
 # if __name__ == "__main__":
