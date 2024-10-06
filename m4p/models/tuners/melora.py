@@ -54,9 +54,9 @@ class MELoRALinear(nn.Linear):
         return super().forward(x) + self.melora(x)
 
 
-if __name__ == "__main__":
-    import math
-    melora_layer = MELoRALinear(8, 8, [2, 3])
-    x = torch.randn(2, 8)
-    print(x)
-    print(melora_layer(x))
+# if __name__ == "__main__":
+#     import math
+#     melora_layer = MELoRALinear(8, 8, [2, 3])
+#     x = torch.randn(2, 8)
+#     print(x)
+#     print(melora_layer(x))
